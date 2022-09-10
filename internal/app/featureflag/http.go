@@ -4,9 +4,9 @@ import (
 	"net/http"
 )
 
-func NewHttpServeMux() (*http.ServeMux, error) {
+func NewHttpServeMux(apiHandler *ApiHandler) (*http.ServeMux, error) {
 	mux := http.NewServeMux()
-	mux.Handle("/", http.HandlerFunc(Home))
+	mux.Handle("/", http.HandlerFunc(apiHandler.Home))
 
 	return mux, nil
 }
