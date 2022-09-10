@@ -7,7 +7,9 @@
 package featureflag
 
 import (
+	"snapp-featureflag/internal/app/featureflag/feature"
 	"snapp-featureflag/internal/package/config"
+	"snapp-featureflag/internal/package/service/redis"
 )
 
 // Injectors from wire.go:
@@ -17,7 +19,15 @@ func CreateApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	serveMux, err := NewHttpServeMux()
+	cacheServiceImpl, err := redis.NewCacheService(appConfig)
+	if err != nil {
+		return nil, err
+	}
+	repositoryImpl := feature.NewRepository(cacheServiceImpl)
+	commandHandler := feature.NewCommandHandler(repositoryImpl)
+	queryHandler := feature.NewQueryHandler(repositoryImpl)
+	apiHandler := NewApiHandler(commandHandler, queryHandler)
+	serveMux, err := NewHttpServeMux(apiHandler)
 	if err != nil {
 		return nil, err
 	}
