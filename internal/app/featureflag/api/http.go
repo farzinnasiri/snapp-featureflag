@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func NewHttpServeMux(apiHandler *ApiHandler) (*http.ServeMux, error) {
+func NewHttpServeMux(apiHandler *Handler) (*http.ServeMux, error) {
 	mux := http.NewServeMux()
 	mux.Handle("/feature/create",
 		http.HandlerFunc(apiHandler.CreateFeature))
