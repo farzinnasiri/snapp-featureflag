@@ -9,7 +9,7 @@ package featureflag
 import (
 	"snapp-featureflag/internal/app/featureflag/feature"
 	"snapp-featureflag/internal/package/config"
-	"snapp-featureflag/internal/package/service/redis"
+	"snapp-featureflag/internal/package/service/cache"
 )
 
 // Injectors from wire.go:
@@ -19,7 +19,7 @@ func CreateApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	cacheServiceImpl, err := redis.NewCacheService(appConfig)
+	cacheServiceImpl, err := cache.NewCacheService(appConfig)
 	if err != nil {
 		return nil, err
 	}
