@@ -9,13 +9,13 @@ func NewUser(id uint, version Version) (User, error) {
 	return User{id, version}, nil
 }
 
-//GetFeaturesActivationStates checks the activation state of a feature for a specific user based on current features in
+//GetFeatureFlags checks the activation state of a feature for a specific user based on current features in
 // the system and previous evaluated features for the user. Worst case time complexity is T = 2 * O(n) = O(n) where n is
-// the  number of features in the system.
-func (u User) GetFeaturesActivationStates(previousActivatedFeatures []*FeatureWithFlag,
+// the  number of features in the system. Disclaimer: This function is not Clean at All! =))
+func (u User) GetFeatureFlags(previousFeatureFlags []*FeatureWithFlag,
 	allFeatures []*Feature) []*FeatureWithFlag {
 	features := make([]*FeatureWithFlag, 0, len(allFeatures))
-	oldFeaturesMap := createFeaturesMap(previousActivatedFeatures)
+	oldFeaturesMap := createFeaturesMap(previousFeatureFlags)
 
 	for _, feature := range allFeatures {
 		if feature.Rule.HasMinVersion() &&
