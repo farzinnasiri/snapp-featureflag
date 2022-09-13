@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-type ApiHandler struct {
+type Handler struct {
 	commandHandler feature.CommandHandler
 	queryHandler   feature.QueryHandler
 }
@@ -39,11 +39,11 @@ type GetFeatureResponse struct {
 	Coverage   float32 `json:"coverage,omitempty"`
 }
 
-func NewApiHandler(commandHandler feature.CommandHandler, queryHandler feature.QueryHandler) *ApiHandler {
-	return &ApiHandler{commandHandler, queryHandler}
+func NewApiHandler(commandHandler feature.CommandHandler, queryHandler feature.QueryHandler) *Handler {
+	return &Handler{commandHandler, queryHandler}
 }
 
-func (a *ApiHandler) CreateFeature(w http.ResponseWriter, r *http.Request) {
+func (a *Handler) CreateFeature(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -58,7 +58,7 @@ func (a *ApiHandler) CreateFeature(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	if err = a.commandHandler.Upsert(context.Background(), feature.UpsertFeatureCommand{
+	if err = a.commandHandler.Create(context.Background(), feature.CreateFeatureCommand{
 		Name:       request.Name,
 		MinVersion: request.MinVersion,
 		Coverage:   request.Coverage,
@@ -69,7 +69,7 @@ func (a *ApiHandler) CreateFeature(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *ApiHandler) UpdateFeature(w http.ResponseWriter, r *http.Request) {
+func (a *Handler) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -84,7 +84,7 @@ func (a *ApiHandler) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	if err = a.commandHandler.Upsert(context.Background(), feature.UpsertFeatureCommand{
+	if err = a.commandHandler.Update(context.Background(), feature.UpdateFeatureCommand{
 		Name:       request.Name,
 		MinVersion: request.MinVersion,
 		Coverage:   request.Coverage,
@@ -95,7 +95,7 @@ func (a *ApiHandler) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *ApiHandler) DeleteFeature(w http.ResponseWriter, r *http.Request) {
+func (a *Handler) DeleteFeature(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -119,7 +119,7 @@ func (a *ApiHandler) DeleteFeature(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (a *ApiHandler) GetFeature(w http.ResponseWriter, r *http.Request) {
+func (a *Handler) GetFeature(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -150,7 +150,7 @@ func (a *ApiHandler) GetFeature(w http.ResponseWriter, r *http.Request) {
 	w.Write(jsonResp)
 }
 
-func (a *ApiHandler) GetUserActiveFeatures(w http.ResponseWriter, r *http.Request) {
+func (a *Handler) GetUserActiveFeatures(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return

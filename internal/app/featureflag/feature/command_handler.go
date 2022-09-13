@@ -14,8 +14,8 @@ func NewCommandHandler(repository Repository) CommandHandler {
 	return CommandHandler{repository}
 }
 
-func (c CommandHandler) Upsert(ctx context.Context,
-	command UpsertFeatureCommand) error {
+func (c CommandHandler) Create(ctx context.Context,
+	command CreateFeatureCommand) error {
 
 	newFeature, err := entity.NewFeatureFromParams(entity.CreateFeatureParams{
 		Name:       command.Name,
@@ -32,10 +32,7 @@ func (c CommandHandler) Upsert(ctx context.Context,
 	}
 
 	if feature != nil {
-		err = c.updateFeature(ctx, feature, newFeature)
-		if err != nil {
-			return err
-		}
+		return errors.New("feature already exists")
 	}
 
 	if err = c.Repository.CreateFeature(ctx, newFeature); err != nil {
@@ -46,12 +43,41 @@ func (c CommandHandler) Upsert(ctx context.Context,
 
 }
 
-func (c CommandHandler) updateFeature(
-	ctx context.Context, feature *entity.Feature, newFeature *entity.Feature) error {
+func (c CommandHandler) Update(ctx context.Context,
+	command UpdateFeatureCommand) error {
+
+	newFeature, err := entity.NewFeatureFromParams(entity.CreateFeatureParams{
+		Name:       command.Name,
+		Coverage:   command.Coverage,
+		MinVersion: command.MinVersion,
+	})
+	if err != nil {
+		return err
+	}
+
+	feature, err := c.Repository.GetFeature(ctx, newFeature.Name)
+	if err != nil {
+		return err
+	}
+
+	if feature == nil {
+		return errors.New("feature does not exist")
+	}
+
+	if err := c.updateFeature(ctx, feature, newFeature); err != nil {
+		return err
+	}
+
+	return nil
+
+}
+
+func (c CommandHandler) updateFeature(ctx context.Context,
+	feature *entity.Feature, newFeature *entity.Feature) error {
 	if err := feature.Update(newFeature); err != nil {
 		return err
 	}
-	if err := c.Repository.UpdateFeature(ctx, feature.Name, feature); err != nil {
+	if err := c.Repository.UpdateFeature(ctx, feature.Name, newFeature); err != nil {
 		return err
 	}
 	return nil
