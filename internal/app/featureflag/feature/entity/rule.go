@@ -35,3 +35,7 @@ func (r *Rule) HasCoverage() bool {
 func (r *Rule) HasMinVersion() bool {
 	return r.MinVersion != nil
 }
+
+func (r *Rule) IsCombined() bool {
+	return r.HasMinVersion() && r.HasCoverage()
+}

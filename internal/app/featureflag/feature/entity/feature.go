@@ -18,6 +18,7 @@ type CreateFeatureParams struct {
 
 type FeatureWithFlag struct {
 	Name     string
+	Coverage float32
 	IsActive bool
 }
 
@@ -78,11 +79,34 @@ func (f *Feature) validate() error {
 }
 
 func (f *Feature) Update(newFeature *Feature) error {
+	if !f.Rule.IsCombined() {
+		err := f.checkNewFieldAdded(newFeature)
+		if err != nil {
+			return err
+		}
+	}
+
+	if f.Rule.IsCombined() && !newFeature.Rule.IsCombined() {
+		return errors.New("not allowed to remove fields from rule")
+	}
+
 	if f.Rule.Coverage > newFeature.Rule.Coverage {
 		return errors.New("can not reduce coverage")
 	}
+
 	f.Rule = newFeature.Rule
 
+	return nil
+}
+
+func (f *Feature) checkNewFieldAdded(newFeature *Feature) error {
+	if f.Rule.HasMinVersion() && newFeature.Rule.HasCoverage() {
+		return errors.New("not allowed to add new field to rule")
+	}
+
+	if f.Rule.HasCoverage() && newFeature.Rule.HasMinVersion() {
+		return errors.New("not allowed to add new field to rule")
+	}
 	return nil
 }
 
