@@ -14,8 +14,8 @@ type Repository interface {
 	CreateFeature(ctx context.Context, feature *entity.Feature) error
 	UpdateFeature(ctx context.Context, featureName string, feature *entity.Feature) error
 	DeleteFeature(ctx context.Context, featureName string) error
-	GetActiveFeaturesOfUserIfExist(ctx context.Context, userId uint) ([]*entity.Feature, error)
-	SetActiveFeaturesForUser(ctx context.Context, userId uint, features []*entity.Feature) error
+	GetFeatureFlagsByUserIfExist(ctx context.Context, userId uint) ([]*entity.FeatureWithFlag, error)
+	SetFeatureFlagsByUser(ctx context.Context, userId uint, features []*entity.FeatureWithFlag) error
 	GetAllFeatures(ctx context.Context) ([]*entity.Feature, error)
 }
 
@@ -74,8 +74,8 @@ func (r RepositoryImpl) DeleteFeature(ctx context.Context, featureName string) e
 	return nil
 }
 
-func (r RepositoryImpl) SetActiveFeaturesForUser(ctx context.Context,
-	userId uint, features []*entity.Feature) error {
+func (r RepositoryImpl) SetFeatureFlagsByUser(ctx context.Context,
+	userId uint, features []*entity.FeatureWithFlag) error {
 	featuresJsons := make([]string, len(features), len(features))
 
 	for i, feature := range features {
@@ -99,10 +99,10 @@ func (r RepositoryImpl) SetActiveFeaturesForUser(ctx context.Context,
 	return nil
 }
 
-func (r RepositoryImpl) GetActiveFeaturesOfUserIfExist(
-	ctx context.Context, userId uint) ([]*entity.Feature, error) {
+func (r RepositoryImpl) GetFeatureFlagsByUserIfExist(
+	ctx context.Context, userId uint) ([]*entity.FeatureWithFlag, error) {
 	featuresJsonList, err := r.cache.GetList(ctx, r.getUserCacheKey(userId))
-	features := make([]*entity.Feature, len(featuresJsonList), len(featuresJsonList))
+	features := make([]*entity.FeatureWithFlag, len(featuresJsonList), len(featuresJsonList))
 
 	if err != nil {
 		if err == redis2.Nil {
@@ -112,7 +112,7 @@ func (r RepositoryImpl) GetActiveFeaturesOfUserIfExist(
 	}
 
 	for i, featureJson := range featuresJsonList {
-		feature := &entity.Feature{}
+		feature := &entity.FeatureWithFlag{}
 		if err = json.Unmarshal([]byte(featureJson), &feature); err != nil {
 			return nil, err
 		}

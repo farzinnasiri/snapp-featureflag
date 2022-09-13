@@ -53,7 +53,7 @@ func (q QueryHandler) GetActiveFeaturesByUserId(ctx context.Context,
 		return nil, err
 	}
 
-	previousActiveFeatures, err := q.Repository.GetActiveFeaturesOfUserIfExist(ctx, user.Id)
+	previousActiveFeatures, err := q.Repository.GetFeatureFlagsByUserIfExist(ctx, user.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -63,9 +63,9 @@ func (q QueryHandler) GetActiveFeaturesByUserId(ctx context.Context,
 		return nil, err
 	}
 
-	activeFeatures := user.GetActiveFeatures(previousActiveFeatures, features)
+	activeFeatures := user.GetFeaturesActivationStates(previousActiveFeatures, features)
 
-	if err = q.Repository.SetActiveFeaturesForUser(ctx, user.Id, activeFeatures); err != nil {
+	if err = q.Repository.SetFeatureFlagsByUser(ctx, user.Id, activeFeatures); err != nil {
 		return nil, err
 	}
 
@@ -73,12 +73,15 @@ func (q QueryHandler) GetActiveFeaturesByUserId(ctx context.Context,
 
 }
 
-func mapFeaturesToActiveFeaturesResp(features []*entity.Feature) *GetActiveFeaturesByUserIdQueryResponse {
+func mapFeaturesToActiveFeaturesResp(
+	features []*entity.FeatureWithFlag) *GetActiveFeaturesByUserIdQueryResponse {
 	resp := &GetActiveFeaturesByUserIdQueryResponse{}
-	names := make([]FeatureName, len(features), len(features))
+	names := make([]FeatureName, 0)
 
-	for i, feature := range features {
-		names[i] = FeatureName{feature.Name}
+	for _, feature := range features {
+		if feature.IsActive {
+			names = append(names, FeatureName{feature.Name})
+		}
 	}
 
 	resp.FeaturesNames = names
