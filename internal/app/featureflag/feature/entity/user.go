@@ -35,6 +35,7 @@ func (u User) GetFeatureFlags(previousFeatureFlags []*FeatureWithFlag,
 						features = append(features, &FeatureWithFlag{
 							Name:     feature.Name,
 							IsActive: true,
+							Coverage: feature.Rule.Coverage,
 						})
 						continue
 					}
@@ -42,6 +43,7 @@ func (u User) GetFeatureFlags(previousFeatureFlags []*FeatureWithFlag,
 				features = append(features, &FeatureWithFlag{
 					Name:     feature.Name,
 					IsActive: false,
+					Coverage: feature.Rule.Coverage,
 				})
 				continue
 			}
@@ -50,6 +52,7 @@ func (u User) GetFeatureFlags(previousFeatureFlags []*FeatureWithFlag,
 				features = append(features, &FeatureWithFlag{
 					Name:     feature.Name,
 					IsActive: true,
+					Coverage: feature.Rule.Coverage,
 				})
 				continue
 			}
@@ -58,6 +61,7 @@ func (u User) GetFeatureFlags(previousFeatureFlags []*FeatureWithFlag,
 				features = append(features, &FeatureWithFlag{
 					Name:     feature.Name,
 					IsActive: true,
+					Coverage: feature.Rule.Coverage,
 				})
 				continue
 			}
@@ -65,6 +69,7 @@ func (u User) GetFeatureFlags(previousFeatureFlags []*FeatureWithFlag,
 			features = append(features, &FeatureWithFlag{
 				Name:     feature.Name,
 				IsActive: false,
+				Coverage: feature.Rule.Coverage,
 			})
 			continue
 		}
