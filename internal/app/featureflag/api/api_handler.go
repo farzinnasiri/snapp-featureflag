@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"snapp-featureflag/internal/app/featureflag/feature"
 	"strconv"
@@ -44,6 +45,7 @@ func NewApiHandler(commandHandler feature.CommandHandler, queryHandler feature.Q
 }
 
 func (a *Handler) CreateFeature(w http.ResponseWriter, r *http.Request) {
+	log.Println("Call to CreateFeature")
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -70,6 +72,7 @@ func (a *Handler) CreateFeature(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Handler) UpdateFeature(w http.ResponseWriter, r *http.Request) {
+	log.Println("Call to UpdateFeature")
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -96,6 +99,7 @@ func (a *Handler) UpdateFeature(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Handler) DeleteFeature(w http.ResponseWriter, r *http.Request) {
+	log.Println("Call to DeleteFeature")
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -120,6 +124,7 @@ func (a *Handler) DeleteFeature(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Handler) GetFeature(w http.ResponseWriter, r *http.Request) {
+	log.Println("Call to GetFeature")
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -151,6 +156,7 @@ func (a *Handler) GetFeature(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *Handler) GetUserActiveFeatures(w http.ResponseWriter, r *http.Request) {
+	log.Println("Call to GetUserActiveFeatures")
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
