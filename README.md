@@ -1,5 +1,22 @@
 # Feature Flag
 
+## Deployment
+
+```shell
+# cd to the working directory of the project
+make dependencies # to download dependencies
+make build # to build a binary output of the project
+docker build -t featureflag .
+docker run --rm featureflag # to run the image independently
+docker-compose up 
+```
+Also, you can independently run the binary without docker and use `docker-compose up redis` to only deploy redis.
+
+*ideally the Dockerfile should take care of compiling the codebase and running it inside the container
+,however, due to international sanctions and poor internet! I wasn't able to do that, so instead the Dockerfile just 
+copies the already created binary and runs it. Please keep in mind that you might need to change the platform from
+`FROM ubuntu:20.04` to the specs of your own machine for this to work.
+
 ## Benchmarks
 
 I benchmarked to programme to see how it behaves under high loads of requests. The only important api that we're
