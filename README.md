@@ -215,5 +215,5 @@ for n in {1..100}; do curl -X POST -H "Content-Type: application/json"  -d '{"na
 
 ## Other Nodes
 The project does not contain proper error handling and logging mechanism which is required in real-life production
-code. Also, the code does not any kinds of automated tests. I did not implement these because they seemed unnecessary
-for this task based what I was tolled by the interviewers.
+code. Also, the code mostly does not any kinds of automated tests except [user_test.go](./internal/app/featureflag/feature/entity/user_test.go). 
+I did not implement these because they seemed unnecessary for this task based what I was tolled by the interviewers.
