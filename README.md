@@ -45,3 +45,17 @@ Test Criteria:
 
 **For n <= 2000**
 ![1](./images/scatter_plot%20(1).jpeg)
+
+
+##### Resources
+I used [this](https://github.com/nakabonne/ali) tool to get the benchmarks with the following command:
+
+```shell
+ali --rate=100 --duration=10s --method=GET 'http://localhost:8080/feature/get-active-features?user_id=1&version=1.0.0'
+```
+
+To add features:
+
+```shell
+for n in {1..100}; do curl -X POST -H "Content-Type: application/json"  -d '{"name": "'"$n"'", "coverage": 0.05}' localhost:8080/feature/create; done;
+```
