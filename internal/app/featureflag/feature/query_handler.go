@@ -63,7 +63,7 @@ func (q QueryHandler) GetActiveFeaturesByUserId(ctx context.Context,
 		return nil, err
 	}
 
-	activeFeatures := user.GetFeaturesActivationStates(previousActiveFeatures, features)
+	activeFeatures := user.GetFeatureFlags(previousActiveFeatures, features)
 
 	if err = q.Repository.SetFeatureFlagsByUser(ctx, user.Id, activeFeatures); err != nil {
 		return nil, err
