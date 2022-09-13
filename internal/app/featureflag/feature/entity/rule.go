@@ -12,11 +12,14 @@ func NewRule(coverage float32, minVersion *Version) (*Rule, error) {
 }
 
 func (r *Rule) validate() error {
-	if r.Coverage < 0 {
-		return errors.New("r coverage should be greater than zero")
-	}
 	if r.Coverage == 0 && r.MinVersion == nil {
 		return errors.New("policy can not be nil")
+	}
+	if r.Coverage < 0 {
+		return errors.New("coverage should be greater than zero")
+	}
+	if r.Coverage > 1 {
+		return errors.New("coverage should not be greater than 1")
 	}
 	if r.MinVersion != nil {
 		return r.MinVersion.validate()
