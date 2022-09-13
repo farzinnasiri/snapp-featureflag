@@ -1,4 +1,4 @@
-package redis
+package cache
 
 import (
 	"context"
@@ -7,19 +7,20 @@ import (
 	"snapp-featureflag/internal/package/config"
 )
 
-type CacheService interface {
+type Service interface {
 	SetByKey(ctx context.Context, key string, value string) error
 	GetByKey(ctx context.Context, key string) (string, error)
+	DeleteByKey(ctx context.Context, key string) error
 	GetAllByKey(ctx context.Context, keyPattern string) ([]string, error)
 	GetList(ctx context.Context, key string) ([]string, error)
 	AddToList(ctx context.Context, key string, values ...string) error
 }
 
-type CacheServiceImpl struct {
+type ServiceImpl struct {
 	redisClient *redis.Client
 }
 
-func NewCacheService(config *config.AppConfig) (CacheServiceImpl, error) {
+func NewCacheService(config *config.AppConfig) (ServiceImpl, error) {
 	redisClient := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprint(config.Redis.Host, ":", config.Redis.Port),
 		Password: config.Redis.Password,
@@ -27,28 +28,32 @@ func NewCacheService(config *config.AppConfig) (CacheServiceImpl, error) {
 	ctx := context.Background()
 	_, err := redisClient.Ping(ctx).Result()
 	if err != nil {
-		return CacheServiceImpl{}, err
+		return ServiceImpl{}, err
 	}
 
-	return CacheServiceImpl{redisClient}, nil
+	return ServiceImpl{redisClient}, nil
 }
 
-func (c CacheServiceImpl) SetByKey(ctx context.Context, key string, value string) error {
+func (c ServiceImpl) SetByKey(ctx context.Context, key string, value string) error {
 	return c.redisClient.Set(ctx, key, value, 0).Err()
 }
 
-func (c CacheServiceImpl) GetByKey(ctx context.Context, key string) (string, error) {
+func (c ServiceImpl) GetByKey(ctx context.Context, key string) (string, error) {
 	return c.redisClient.Get(ctx, key).Result()
 }
 
-func (c CacheServiceImpl) GetAllByKey(ctx context.Context, keyPattern string) ([]string, error) {
+func (c ServiceImpl) DeleteByKey(ctx context.Context, key string) error {
+	return c.redisClient.Del(ctx, key).Err()
+}
+
+func (c ServiceImpl) GetAllByKey(ctx context.Context, keyPattern string) ([]string, error) {
 	return c.redisClient.Keys(ctx, keyPattern).Result()
 }
 
-func (c CacheServiceImpl) GetList(ctx context.Context, key string) ([]string, error) {
+func (c ServiceImpl) GetList(ctx context.Context, key string) ([]string, error) {
 	return c.redisClient.LRange(ctx, key, 0, -1).Result()
 }
 
-func (c CacheServiceImpl) AddToList(ctx context.Context, key string, values ...string) error {
+func (c ServiceImpl) AddToList(ctx context.Context, key string, values ...string) error {
 	return c.redisClient.LPush(ctx, key, values).Err()
 }
