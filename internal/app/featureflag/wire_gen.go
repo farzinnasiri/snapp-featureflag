@@ -7,6 +7,7 @@
 package featureflag
 
 import (
+	"snapp-featureflag/internal/app/featureflag/api"
 	"snapp-featureflag/internal/app/featureflag/feature"
 	"snapp-featureflag/internal/package/config"
 	"snapp-featureflag/internal/package/service/cache"
@@ -26,8 +27,8 @@ func CreateApp() (*App, error) {
 	repositoryImpl := feature.NewRepository(cacheServiceImpl)
 	commandHandler := feature.NewCommandHandler(repositoryImpl)
 	queryHandler := feature.NewQueryHandler(repositoryImpl)
-	apiHandler := NewApiHandler(commandHandler, queryHandler)
-	serveMux, err := NewHttpServeMux(apiHandler)
+	apiHandler := api.NewApiHandler(commandHandler, queryHandler)
+	serveMux, err := api.NewHttpServeMux(apiHandler)
 	if err != nil {
 		return nil, err
 	}

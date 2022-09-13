@@ -5,6 +5,7 @@ package featureflag
 
 import (
 	"github.com/google/wire"
+	"snapp-featureflag/internal/app/featureflag/api"
 	"snapp-featureflag/internal/app/featureflag/feature"
 	"snapp-featureflag/internal/package/config"
 	"snapp-featureflag/internal/package/service/cache"
@@ -20,8 +21,8 @@ func CreateApp() (*App, error) {
 			wire.Bind(new(feature.Repository), new(feature.RepositoryImpl)),
 			feature.NewCommandHandler,
 			feature.NewQueryHandler,
-			NewApiHandler,
-			NewHttpServeMux,
+			api.NewApiHandler,
+			api.NewHttpServeMux,
 			NewApp,
 		),
 	)

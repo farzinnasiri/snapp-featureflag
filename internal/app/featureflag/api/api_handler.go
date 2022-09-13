@@ -1,4 +1,4 @@
-package featureflag
+package api
 
 import (
 	"context"
