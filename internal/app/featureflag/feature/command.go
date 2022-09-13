@@ -1,12 +1,6 @@
 package feature
 
-type CreateFeatureCommand struct {
-	Name       string
-	MinVersion string
-	Coverage   float32
-}
-
-type UpdateFeatureCommand struct {
+type UpsertFeatureCommand struct {
 	Name       string
 	MinVersion string
 	Coverage   float32
