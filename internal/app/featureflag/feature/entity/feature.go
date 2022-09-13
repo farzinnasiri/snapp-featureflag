@@ -16,7 +16,7 @@ type CreateFeatureParams struct {
 	MinVersion string
 }
 
-type FeatureNameWithActivation struct {
+type FeatureWithFlag struct {
 	Name     string
 	IsActive bool
 }
