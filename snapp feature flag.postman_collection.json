@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "b3691cbc-3799-4ac1-89a6-9de85ded0f0d",
+		"name": "snapp feature flag",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Active Features",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature/get-active-features?user_id=2&version=1.9.9",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature",
+						"get-active-features"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "2"
+						},
+						{
+							"key": "version",
+							"value": "1.9.9"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Feature",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature/get?name=a",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature",
+						"get"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Feature",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"a\",\n    \"coverage\": 0.5,\n    \"min_version\" : \"1.0.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Feature",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"a\",\n    \"coverage\": 0.8,\n    \"min_version\" : \"4.0.0\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature/update",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Feature",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"a\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/feature/delete",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"feature",
+						"delete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
